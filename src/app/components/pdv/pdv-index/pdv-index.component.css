@@ -1,0 +1,29 @@
+.section-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--navbar-height));
+  width: 50%;
+  top: 0;
+  overflow: hidden;
+}
+
+.sale-products-list::-webkit-scrollbar {
+  display: none;
+}
+
+.products-section,
+.sale-totals {
+  width: 70%;
+}
+
+.sale-totals {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  height: 100px;
+}
+
+.tools-section {
+  width: 30%;
+}

@@ -1,0 +1,95 @@
+<div class="container my-5">
+  <h1 class="mb-3">Add new product</h1>
+  <form #form="ngForm" (ngSubmit)="addProduct()">
+    <div class="row">
+      <div class="col mb-3">
+        <label for="inputProductName" class="form-label">
+          Name
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputProductName"
+          name="name"
+          [(ngModel)]="productRequest.name"
+        />
+      </div>
+      <div class="col mb-3">
+        <label for="inputProductBarcode" class="form-label">
+          Barcode
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputProductBarcode"
+          name="barcode"
+          [(ngModel)]="productRequest.barcode"
+        />
+      </div>
+      <div class="col mb-3">
+        <label for="inputProductWholesalePrice" class="form-label">
+          Wholesale Price
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="inputProductWholesalePrice"
+          name="wholesale_price"
+          [(ngModel)]="productRequest.wholesale_price"
+        />
+      </div>
+      <div class="col mb-2">
+        <label for="inputProductRetailPrice" class="form-label">
+          Retail Price
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="inputProductRetailPrice"
+          name="retail_price"
+          [(ngModel)]="productRequest.retail_price"
+        />
+      </div>
+    </div>    
+    <div class="mb-3">
+      <label for="textareaProductDescription" class="form-label">
+        Description
+      </label>
+      <textarea
+        class="form-control"
+        id="textareaProductDescription"
+        rows="3"
+        name="description"
+        [(ngModel)]="productRequest.description"
+      ></textarea>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          name="manufacturer_id"
+          [(ngModel)]="productRequest.manufacturer_id"
+        >
+          <option selected value="">Select a manufacturer</option>
+          <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.uid">
+            {{manufacturer.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="mb-3 form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="inputProductActive"
+        name="active"
+        [(ngModel)]="productRequest.active"
+      />
+      <label class="form-check-label" for="inputProductActive">
+        Active
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>

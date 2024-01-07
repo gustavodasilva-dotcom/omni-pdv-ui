@@ -1,0 +1,44 @@
+<div class="container my-5">
+  <h1 class="mb-3">Add new manufacturer</h1>
+  <form #form="ngForm" (ngSubmit)="addManufacturer()">
+    <div class="row">
+      <div class="col mb-3">
+        <label for="inputManufacturerName" class="form-label">
+          Name
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputManufacturerName"
+          name="name"
+          [(ngModel)]="manufacturerRequest.name"
+        />
+      </div>
+      <div class="col mb-3">
+        <label for="inputManufacturerCrn" class="form-label">
+          CRN
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputManufacturerCrn"
+          name="crn"
+          [(ngModel)]="manufacturerRequest.crn"
+        />
+      </div>
+    </div>
+    <div class="mb-3 form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="inputManufacturerActive"
+        name="active"
+        [(ngModel)]="manufacturerRequest.active"
+      />
+      <label class="form-check-label" for="inputManufacturerActive">
+        Active
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>

@@ -1,0 +1,108 @@
+<div class="d-flex">
+  <section class="section-wrapper products-section">
+    <form class="p-3 bg-light border-bottom" (ngSubmit)="addProduct()">
+      <div class="row">
+        <div class="col-md-4">
+          <input
+            text="text"
+            class="form-control form-control-lg"
+            id="inputPDVProductBarcode"
+            placeholder="Product barcode"
+            name="barcode"
+            ngModel #inputBarcodeSearch
+            [(ngModel)]="addProjectToSaleRequest.barcode"
+            (keydown)="searchProduct($event)"
+          />
+        </div>
+        <div class="col-md-2">
+          <input
+            text="text"
+            class="form-control form-control-lg"
+            id="inputPDVProductPrice"
+            ngModel #inputProductPrice
+            disabled
+          />
+        </div>
+        <div class="col-md-2">
+          <input
+            text="text"
+            class="form-control form-control-lg"
+            id="inputPDVProductQuantity"
+            placeholder="Quantity"
+            name="quantity"
+            ngModel #inputProductQuantity
+            [(ngModel)]="addProjectToSaleRequest.quantity"
+            (keyup)="calculateTotalPrice()"
+          />
+        </div>
+        <div class="col-md-2">
+          <input
+            text="text"
+            class="form-control form-control-lg"
+            id="inputPDVProductTotalPrice"
+            ngModel #inputProductTotalPrice
+            disabled
+          />
+        </div>
+        <div class="col-md-2 d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">Add product</button>
+        </div>
+      </div>
+    </form>
+    <div class="border flex-grow-1 overflow-scroll sale-products-list">
+      <ul class="list-group">
+        <li class="list-group-item bg-light">
+          <div class="d-flex justify-content-between">
+            <span>#1</span>
+            <span>#1</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="h6">6981226639</span>
+              <br />
+              <span class="h4">Leite Longa Vida Integral QUALITÁ 1 Litro</span>
+            </div>
+            <div class="d-flex text-bottom justify-content-between mt-3">
+              <span class="mx-3 fs-4">3</span>
+              <span class="mx-3 fs-4">x</span>
+              <span class="mx-3 fs-4">$5,00</span>
+              <span class="mx-3 fs-4">=</span>
+              <span class="mx-3 fs-4 bolder">$15,00</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="sale-totals bg-light border-top">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex">
+          <div class="mx-2">
+            <span>Items:</span>
+            <br />
+            <span class="h4">1</span>
+          </div>
+          <div class="ms-5">
+            <span>Volumes:</span>
+            <br />
+            <span class="h4">2</span>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <span>Discount:</span>
+            <br />
+            <span class="h5">$100,00</span>
+          </div>
+          <div class="mx-5">
+            <span>SUBTOTAL:</span>
+            <br />
+            <span class="h2">$100,00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section-wrapper tools-section bg-light border-start">
+    
+  </section>
+</div>

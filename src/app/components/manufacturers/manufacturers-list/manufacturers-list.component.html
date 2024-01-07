@@ -1,0 +1,20 @@
+<div class="container my-5">
+  <h1 class="mb-3">Manufacturers</h1>
+  <table class="table table-striped table-hover" *ngIf="manufacturers && manufacturers.length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>CRN</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let manufacturer of manufacturers">
+        <td>{{ manufacturer.name }}</td>
+        <td>{{ manufacturer.crn }}</td>
+        <td>{{ manufacturer.active ? "Yes" : "No" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!manufacturers || manufacturers.length <= 0">No manufacturers found</p>
+</div>
