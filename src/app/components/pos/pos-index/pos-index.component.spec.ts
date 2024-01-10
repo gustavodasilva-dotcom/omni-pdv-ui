@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PdvIndexComponent } from './pdv-index.component';
+import { PosIndexComponent } from './pos-index.component';
 
-describe('PdvIndexComponent', () => {
-  let component: PdvIndexComponent;
-  let fixture: ComponentFixture<PdvIndexComponent>;
+describe('PosIndexComponent', () => {
+  let component: PosIndexComponent;
+  let fixture: ComponentFixture<PosIndexComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PdvIndexComponent]
+      imports: [PosIndexComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PdvIndexComponent);
+    fixture = TestBed.createComponent(PosIndexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

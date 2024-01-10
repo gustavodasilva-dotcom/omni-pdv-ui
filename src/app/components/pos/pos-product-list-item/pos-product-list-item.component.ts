@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-pdv-product-list-item',
+  selector: 'app-pos-product-list-item',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './pdv-product-list-item.component.html',
-  styleUrl: './pdv-product-list-item.component.css'
+  templateUrl: './pos-product-list-item.component.html',
+  styleUrl: './pos-product-list-item.component.css'
 })
-export class PdvProductListItemComponent implements OnChanges {
+export class PosProductListItemComponent implements OnChanges {
   @Input() productOrder: number;
   @Input() productBarcode: string | undefined;
   @Input() productName: string | undefined;

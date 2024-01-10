@@ -7,20 +7,20 @@ import { Sale } from '../../../models/sale.model';
 import { SaleProduct } from '../../../models/sale-product.model';
 import { SalesService } from '../../../services/sales/sales.service';
 import { ProductsService } from '../../../services/products/products.service';
-import { PdvProductListItemComponent } from '../pdv-product-list-item/pdv-product-list-item.component';
+import { PosProductListItemComponent } from '../pos-product-list-item/pos-product-list-item.component';
 import SwalToast from '../../../libs/swal/SwalToast';
 
 @Component({
-  selector: 'app-pdv-index',
+  selector: 'app-pos-index',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule
   ],
-  templateUrl: './pdv-index.component.html',
-  styleUrl: './pdv-index.component.css'
+  templateUrl: './pos-index.component.html',
+  styleUrl: './pos-index.component.css'
 })
-export class PdvIndexComponent implements OnInit {
+export class PosIndexComponent implements OnInit {
   @ViewChild('inputBarcodeSearch') inputBarcodeSearch: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductPrice') inputProductPrice: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductQuantity') inputProductQuantity: ElementRef<HTMLInputElement>;
@@ -51,7 +51,7 @@ export class PdvIndexComponent implements OnInit {
     this.saleProductContainer.clear();
 
     this.sale?.products.sort(p => p.order).map((product) => {
-      const itemComponent = this.saleProductContainer.createComponent(PdvProductListItemComponent);
+      const itemComponent = this.saleProductContainer.createComponent(PosProductListItemComponent);
 
       itemComponent.setInput('productOrder', product.order);
       itemComponent.setInput('productBarcode', product.product.barcode);
