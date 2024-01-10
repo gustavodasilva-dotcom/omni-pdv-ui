@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title">Discount</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="row">
+      <div class="col mb-3">
+        <label for="inputDiscountValue" class="form-label">
+          Discount value
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputDiscountValue"
+          name="value"
+          [(ngModel)]="discountRequest.value"
+        />
+      </div>
+      <div class="col mb-3">
+        <label for="inputDiscountType" class="form-label">
+          Discount type
+        </label>
+        <select
+          class="form-select"
+          id="inputDiscountType"
+          aria-label="Default select example"
+          name="type"
+          [(ngModel)]="discountRequest.type"
+        >
+          <option [value]="discountTypeEnum.Monetary" selected>
+            {{ discountTypeEnum[discountTypeEnum.Monetary] }}
+          </option>
+          <option [value]="discountTypeEnum.Percentage">
+            {{ discountTypeEnum[discountTypeEnum.Percentage] }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+  <button type="button" class="btn btn-primary" (click)="saveDiscount()">Save discount</button>
+</div>

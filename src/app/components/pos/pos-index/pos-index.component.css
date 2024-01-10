@@ -11,17 +11,8 @@
   display: none;
 }
 
-.products-section,
-.sale-totals {
+.products-section {
   width: 70%;
-}
-
-.sale-totals {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 10px;
-  height: 100px;
 }
 
 .tools-section {

@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@ang
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { Sale } from '../../../models/sale.model';
 import { SaleProduct } from '../../../models/sale-product.model';
@@ -9,6 +10,7 @@ import { SalesService } from '../../../services/sales/sales.service';
 import { ProductsService } from '../../../services/products/products.service';
 import { PosProductListItemComponent } from '../pos-product-list-item/pos-product-list-item.component';
 import SwalToast from '../../../libs/swal/SwalToast';
+import { PosDiscountModalComponent } from '../pos-discount-modal/pos-discount-modal.component';
 
 @Component({
   selector: 'app-pos-index',
@@ -26,10 +28,6 @@ export class PosIndexComponent implements OnInit {
   @ViewChild('inputProductQuantity') inputProductQuantity: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductTotalPrice') inputProductTotalPrice: ElementRef<HTMLInputElement>;
   @ViewChild('saleProductContainer', { read: ViewContainerRef }) saleProductContainer: ViewContainerRef;
-  @ViewChild('spnTotalItems') spnTotalItems: ElementRef<HTMLInputElement>;
-  @ViewChild('spnTotalVolumes') spnTotalVolumes: ElementRef<HTMLInputElement>;
-  @ViewChild('spnDiscount') spnDiscount: ElementRef<HTMLInputElement>;
-  @ViewChild('spnSubtotal') spnSubtotal: ElementRef<HTMLInputElement>;
 
   sale: Sale | undefined;
 
@@ -40,7 +38,8 @@ export class PosIndexComponent implements OnInit {
 
   constructor(
     private salesService: SalesService,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -50,7 +49,7 @@ export class PosIndexComponent implements OnInit {
   private _renderSaleProductsList() {
     this.saleProductContainer.clear();
 
-    this.sale?.products.sort(p => p.order).map((product) => {
+    this.sale?.products.sort((a, b) => b.order > a.order ? 1 : -1).map((product) => {
       const itemComponent = this.saleProductContainer.createComponent(PosProductListItemComponent);
 
       itemComponent.setInput('productOrder', product.order);
@@ -61,20 +60,21 @@ export class PosIndexComponent implements OnInit {
         itemComponent.setInput('itemDeleted', product.deleted);
       else {
         itemComponent.setInput('itemQuantity', product.quantity);
-        itemComponent.setInput('unityPrice', product.product.retail_price.toLocaleString('us', { minimumFractionDigits: 2, style: 'currency', currency: 'USD' }));
-        itemComponent.setInput('wholePrice', (product.quantity * product.product.retail_price).toLocaleString('us', { minimumFractionDigits: 2, style: 'currency', currency: 'USD' }));
+
+        itemComponent.setInput('unityPrice', product.product.retail_price.toLocaleString('en', {
+          minimumFractionDigits: 2,
+          style: 'currency',
+          currency: 'USD'
+        }));
+        itemComponent.setInput('wholePrice', (product.quantity * product.product.retail_price).toLocaleString('en', {
+          minimumFractionDigits: 2,
+          style: 'currency',
+          currency: 'USD'
+        }));
+
         itemComponent.instance.deleteItem = () => this._deleteProductItem(product);
       }
     });
-  }
-
-  private _setFooterTotals() {
-    const sale = this.sale;
-
-    this.spnTotalItems.nativeElement.textContent = (sale?.products.filter(p => !p.deleted).length ?? 0).toString();
-    this.spnTotalVolumes.nativeElement.textContent = (sale?.products.filter(p => !p.deleted).reduce((acc, prod) => acc + prod.quantity, 0) ?? 0).toString();
-    this.spnDiscount.nativeElement.textContent = (sale?.discount?.value ?? 0).toLocaleString('us', { minimumFractionDigits: 2, style: 'currency', currency: 'USD' });
-    this.spnSubtotal.nativeElement.textContent = (sale?.subtotal ?? 0).toLocaleString('us', { minimumFractionDigits: 2, style: 'currency', currency: 'USD' });
   }
 
   private _setSalesValues() {
@@ -83,7 +83,6 @@ export class PosIndexComponent implements OnInit {
         next: (sale: Sale) => {
           this.sale = sale;
           this._renderSaleProductsList();
-          this._setFooterTotals();
         },
         error: (response: HttpErrorResponse | Error) => {
           Swal.fire({
@@ -128,17 +127,38 @@ export class PosIndexComponent implements OnInit {
       });
   }
 
-  public calculateTotalPrice() {
+  calculateTotalPrice() {
     const quantity = +this.inputProductQuantity.nativeElement.value;
     const price = +this.inputProductPrice.nativeElement.value;
 
-    this.inputProductTotalPrice.nativeElement.value = (price * quantity).toLocaleString('us', { minimumFractionDigits: 2 });
+    this.inputProductTotalPrice.nativeElement.value = (price * quantity).toLocaleString('en', {
+      minimumFractionDigits: 2
+    });
   }
 
-  public addProduct() {
+  getTotalItems(): number {
+    const totalItems = this.sale?.products.filter(p => !p.deleted).length;
+
+    return totalItems ?? 0;
+  }
+
+  getTotalProductsVolume(): number {
+    const totalVolume = this.sale?.products
+      .filter(p => !p.deleted)
+      .reduce((acc, prod) => acc + prod.quantity, 0);
+    
+    return totalVolume ?? 0;
+  }
+
+  addProduct() {
     this.salesService.addProductToSale(this.addProjectToSaleRequest)
       .subscribe({
         next: (sale) => {
+          SwalToast.fire({
+            icon: 'success',
+            title: 'Product added successfully to the list'
+          });
+
           this.sale = sale;
           this._setSalesValues();
 
@@ -146,6 +166,7 @@ export class PosIndexComponent implements OnInit {
           this.inputProductPrice.nativeElement.value = '';
           this.inputProductQuantity.nativeElement.value = '';
           this.inputProductTotalPrice.nativeElement.value = '';
+          
           this.inputBarcodeSearch.nativeElement.focus();
         },
         error: (response: HttpErrorResponse | Error) => {
@@ -158,16 +179,21 @@ export class PosIndexComponent implements OnInit {
       });
   }
 
-  public searchProduct($event: KeyboardEvent) {
-    if ($event.key === 'Enter') {
-      $event.preventDefault();
-      const _barcode = ($event.target as HTMLInputElement)?.value;
-      this.productsService.getProductByBarcode(_barcode)
+  searchProduct(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      const barcode = (e.target as HTMLInputElement)?.value;
+      
+      this.productsService.getProductByBarcode(barcode)
         .subscribe({
           next: (product) => {
-            this.inputProductPrice.nativeElement.value = product.retail_price.toLocaleString('us', { minimumFractionDigits: 2 });
-            this.inputProductQuantity.nativeElement.focus();            
+            this.inputProductPrice.nativeElement.value = product.retail_price.toLocaleString('en', {
+              minimumFractionDigits: 2
+            });
+            
             this.calculateTotalPrice();
+            this.inputProductQuantity.nativeElement.focus();
           },
           error: (response: HttpErrorResponse | Error) => {
             Swal.fire({
@@ -177,6 +203,22 @@ export class PosIndexComponent implements OnInit {
             });
           }
         });
+    }
+  }
+
+  openDiscountModal() {
+    const modalRef = this.modalService.open(PosDiscountModalComponent, {
+      size: 'lg',
+      centered: true,
+    });
+
+    modalRef.componentInstance.saveCallback = () => {
+      SwalToast.fire({
+        icon: 'success',
+        title: 'Discount added successfully'
+      });
+      
+      this._setSalesValues();
     }
   }
 }

@@ -4,6 +4,7 @@ import { SaleProduct } from './sale-product.model'
 
 export interface Sale {
   uid: string,
+  number: number,
   subtotal: number,
   discount: Discount,
   total: number,
