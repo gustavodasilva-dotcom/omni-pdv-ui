@@ -27,9 +27,9 @@ export class ManufacturersListComponent implements OnInit {
         },
         error: (response: HttpErrorResponse | Error) => {
           Swal.fire({
-            title: "Request error",
+            title: 'Request error',
             text: response?.message,
-            icon: "error"
+            icon: 'error'
           });
         }
       });

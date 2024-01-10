@@ -51,26 +51,7 @@
     </form>
     <div class="border flex-grow-1 overflow-scroll sale-products-list">
       <ul class="list-group">
-        <li class="list-group-item bg-light">
-          <div class="d-flex justify-content-between">
-            <span>#1</span>
-            <span>#1</span>
-          </div>
-          <div class="d-flex justify-content-between">
-            <div>
-              <span class="h6">6981226639</span>
-              <br />
-              <span class="h4">Leite Longa Vida Integral QUALITÁ 1 Litro</span>
-            </div>
-            <div class="d-flex text-bottom justify-content-between mt-3">
-              <span class="mx-3 fs-4">3</span>
-              <span class="mx-3 fs-4">x</span>
-              <span class="mx-3 fs-4">$5,00</span>
-              <span class="mx-3 fs-4">=</span>
-              <span class="mx-3 fs-4 bolder">$15,00</span>
-            </div>
-          </div>
-        </li>
+        <ng-template #saleProductContainer></ng-template>
       </ul>
     </div>
     <div class="sale-totals bg-light border-top">
@@ -79,30 +60,28 @@
           <div class="mx-2">
             <span>Items:</span>
             <br />
-            <span class="h4">1</span>
+            <span class="h4" #spnTotalItems></span>
           </div>
           <div class="ms-5">
             <span>Volumes:</span>
             <br />
-            <span class="h4">2</span>
+            <span class="h4" #spnTotalVolumes></span>
           </div>
         </div>
         <div class="d-flex">
           <div>
             <span>Discount:</span>
             <br />
-            <span class="h5">$100,00</span>
+            <span class="h5" #spnDiscount></span>
           </div>
           <div class="mx-5">
             <span>SUBTOTAL:</span>
             <br />
-            <span class="h2">$100,00</span>
+            <span class="h2" #spnSubtotal></span>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <section class="section-wrapper tools-section bg-light border-start">
-    
-  </section>
+  <section class="section-wrapper tools-section bg-light border-start"></section>
 </div>

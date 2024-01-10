@@ -1,0 +1,30 @@
+<li class="list-group-item bg-light">
+  <div class="d-flex justify-content-between">
+    <span>{{ productOrder }}</span>
+    <button
+      type="button"
+      [class.d-none]="itemDeleted"
+      class="btn btn-danger"
+      (click)="deleteItem()"
+    >
+      <i class="bi bi-trash3-fill"></i>
+    </button>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div>
+      <span class="h6">{{ productBarcode }}</span>
+      <br />
+      <span class="h4">{{ productName }}</span>
+    </div>
+    <div [class.d-none]="itemDeleted" class="d-flex text-bottom justify-content-between mt-3">
+      <span class="mx-3 fs-4">{{ itemQuantity }}</span>
+      <span class="mx-3 fs-4">x</span>
+      <span class="mx-3 fs-4">{{ unityPrice }}</span>
+      <span class="mx-3 fs-4">=</span>
+      <span class="mx-3 fs-4 bolder">{{ wholePrice }}</span>
+    </div>
+    <div [class.d-none]="!itemDeleted">
+      <h4 class="text-danger">Product deleted from list</h4>
+    </div>
+  </div>
+</li>
