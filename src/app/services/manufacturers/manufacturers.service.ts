@@ -1,7 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Manufacturer } from '../../models/manufacturer.model';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { Manufacturer } from '../../models/manufacturer.model'
+import { JsonResult } from '../../models/http/json-result.model'
+import { ManufacturerModel } from '../../components/manufacturers/add-manufacturer-modal/models/default-options.model'
+import { Guid } from 'guid-typescript'
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +14,19 @@ export class ManufacturersService {
 
   constructor(private http: HttpClient) { }
 
-  getAllManufacturers(): Observable<Manufacturer[]> {
-    return this.http.get<Manufacturer[]>(this.baseApiUrl + '/api/manufacturers/get-all');
+  getAll(): Observable<JsonResult<Manufacturer[]>> {
+    return this.http.get<JsonResult<Manufacturer[]>>(this.baseApiUrl + '/api/manufacturers/get-all');
   }
 
-  addManufacturer(request: Object): Observable<Manufacturer> {
-    return this.http.post<Manufacturer>(this.baseApiUrl + '/api/manufacturers/add', request);
+  add(request: ManufacturerModel): Observable<JsonResult<Manufacturer>> {
+    return this.http.post<JsonResult<Manufacturer>>(this.baseApiUrl + '/api/manufacturers/add', request);
+  }
+
+  update(id: string, request: ManufacturerModel): Observable<JsonResult<Manufacturer>> {
+    return this.http.put<JsonResult<Manufacturer>>(this.baseApiUrl + `/api/manufacturers/update/${id}`, request);
+  }
+
+  delete(id: Guid) {
+    return this.http.delete(this.baseApiUrl + `/api/manufacturers/delete/${id}`);
   }
 }

@@ -1,7 +1,8 @@
-import { Manufacturer } from './manufacturer.model';
+import { Guid } from 'guid-typescript'
+import { Manufacturer } from './manufacturer.model'
 
 export interface Product {
-  uid: string,
+  id: Guid,
   name: string,
   description: string,
   wholesale_price: number,

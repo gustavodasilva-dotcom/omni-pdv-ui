@@ -14,7 +14,7 @@
           class="form-control"
           id="inputManufacturerName"
           name="name"
-          [(ngModel)]="manufacturerRequest.name"
+          [(ngModel)]="options.model.name"
         />
       </div>
       <div class="col mb-3">
@@ -26,7 +26,7 @@
           class="form-control"
           id="inputManufacturerCrn"
           name="crn"
-          [(ngModel)]="manufacturerRequest.crn"
+          [(ngModel)]="options.model.crn"
         />
       </div>
     </div>
@@ -36,7 +36,7 @@
         class="form-check-input"
         id="inputManufacturerActive"
         name="active"
-        [(ngModel)]="manufacturerRequest.active"
+        [(ngModel)]="options.model.active"
       />
       <label class="form-check-label" for="inputManufacturerActive">
         Active

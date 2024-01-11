@@ -1,5 +1,7 @@
+import { Guid } from 'guid-typescript'
+
 export interface Manufacturer {
-  uid: string,
+  id: Guid,
   name: string,
   crn: string,
   active: boolean

@@ -14,7 +14,7 @@
           class="form-control"
           id="inputDiscountValue"
           name="value"
-          [(ngModel)]="discountRequest.value"
+          [(ngModel)]="options.model.value"
         />
       </div>
       <div class="col mb-3">
@@ -26,12 +26,12 @@
           id="inputDiscountType"
           aria-label="Default select example"
           name="type"
-          [(ngModel)]="discountRequest.type"
+          [(ngModel)]="options.model.type"
         >
-          <option [value]="discountTypeEnum.Monetary" selected>
+          <option [value]="discountTypeEnum.Monetary" [selected]="options.model.type === discountTypeEnum.Monetary">
             {{ discountTypeEnum[discountTypeEnum.Monetary] }}
           </option>
-          <option [value]="discountTypeEnum.Percentage">
+          <option [value]="discountTypeEnum.Percentage" [selected]="options.model.type === discountTypeEnum.Percentage">
             {{ discountTypeEnum[discountTypeEnum.Percentage] }}
           </option>
         </select>

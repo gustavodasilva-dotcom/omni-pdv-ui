@@ -1,41 +1,62 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import { Guid } from 'guid-typescript';
 import Swal from 'sweetalert2';
-import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
-import SwalToast from '../../../libs/swal/SwalToast';
-import { DefaultOptions } from './models/default-options.model';
-import { JsonResult } from '../../../models/http/json-result.model';
+import { Guid } from 'guid-typescript';
 import { Manufacturer } from '../../../models/manufacturer.model';
+import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
+import { ProductsService } from '../../../services/products/products.service';
+import SwalToast from '../../../libs/swal/SwalToast';
+import { Observable } from 'rxjs';
+import { JsonResult } from '../../../models/http/json-result.model';
+import { Product } from '../../../models/product.model';
+import { DefaultOptions } from './models/default-options.model';
 
 @Component({
-  selector: 'app-add-manufacturer-modal',
+  selector: 'app-add-product-modal',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule
   ],
-  templateUrl: './add-manufacturer-modal.component.html',
-  styleUrl: './add-manufacturer-modal.component.css'
+  templateUrl: './add-product-modal.component.html',
+  styleUrl: './add-product-modal.component.css'
 })
-export class AddManufacturerModalComponent {
+export class AddProductModalComponent implements OnInit {
+  manufacturers: Manufacturer[] = [];
+
   options: DefaultOptions;
 
   constructor(
     public activeModal: NgbActiveModal,
+    private productsService: ProductsService,
     private manufacturersService: ManufacturersService
   ) { }
+
+  ngOnInit(): void {
+    this.manufacturersService.getAll()
+      .subscribe({
+        next: (result) => {
+          this.manufacturers = result.data;
+        },
+        error: (response) => {
+          console.error(response);
+        }
+      });
+  }
 
   prepare(options: DefaultOptions) {
     const defaultOptions: DefaultOptions = {
       id: Guid.EMPTY,
       model: {
         name: '',
-        crn: '',
+        description: '',
+        wholesale_price: 0,
+        retail_price: 0,
+        barcode: '',
+        manufacturer_id: '',
         active: true
       },
       callbacks: {
@@ -46,18 +67,18 @@ export class AddManufacturerModalComponent {
     this.options = { ...defaultOptions, ...options };
   }
 
-  addManufacturer() {
-    var request: Observable<JsonResult<Manufacturer>>;
+  addProduct() {
+    var request: Observable<JsonResult<Product>>;
     var message: string;
 
     if (this.options.id === Guid.EMPTY) {
-      request = this.manufacturersService.add(this.options.model);
-      message = 'Manufacturer updated successfully';
+      request = this.productsService.add(this.options.model);
+      message = 'Product added successfully';
     } else {
-      request = this.manufacturersService.update(this.options.id, this.options.model);
-      message = 'Manufacturer updated successfully';
+      request = this.productsService.update(this.options.id, this.options.model);
+      message = 'Product updated successfully';
     }
-
+    
     request.subscribe({
       next: async () => {
         SwalToast.fire({

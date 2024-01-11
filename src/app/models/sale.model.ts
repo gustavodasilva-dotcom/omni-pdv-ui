@@ -1,9 +1,10 @@
+import { Guid } from 'guid-typescript'
 import { Discount } from './discount.model'
 import { SaleStatusEnum } from './enums/sale-status.enum'
 import { SaleProduct } from './sale-product.model'
 
 export interface Sale {
-  uid: string,
+  id: Guid,
   number: number,
   subtotal: number,
   discount: Discount,

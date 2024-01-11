@@ -8,6 +8,7 @@
   <table class="table table-striped table-hover" *ngIf="products && products.length > 0">
     <thead>
       <tr>
+        <th>#</th>
         <th>Name</th>
         <th>Retail Price</th>
         <th>Barcode</th>
@@ -17,6 +18,16 @@
     </thead>
     <tbody>
       <tr *ngFor="let product of products">
+        <td>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" placement="top" ngbTooltip="Update product" (click)="updateProduct(product)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button type="button" class="btn btn-danger" placement="top" ngbTooltip="Delete product" (click)="deleteProduct(product)">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </div>
+        </td>
         <td>{{ product.name }}</td>
         <td>{{ product.retail_price }}</td>
         <td>{{ product.barcode }}</td>

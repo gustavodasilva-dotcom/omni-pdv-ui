@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../../models/product.model';
 import { Observable } from 'rxjs';
+import { JsonResult } from '../../models/http/json-result.model';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +13,23 @@ export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
-  getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseApiUrl + '/api/products/get-all');
+  getAll(): Observable<JsonResult<Product[]>> {
+    return this.http.get<JsonResult<Product[]>>(this.baseApiUrl + '/api/products/get-all');
   }
 
-  getProductByBarcode(barcode: string): Observable<Product> {
-    return this.http.get<Product>(this.baseApiUrl + '/api/products/get-by-barcode/' + barcode);
+  getProductByBarcode(barcode: string): Observable<JsonResult<Product>> {
+    return this.http.get<JsonResult<Product>>(this.baseApiUrl + '/api/products/get-by-barcode/' + barcode);
   }
 
-  addProduct(request: Object): Observable<Product> {
-    return this.http.post<Product>(this.baseApiUrl + '/api/products/add', request);
+  add(request: Object): Observable<JsonResult<Product>> {
+    return this.http.post<JsonResult<Product>>(this.baseApiUrl + '/api/products/add', request);
+  }
+
+  update(id: string, request: Object): Observable<JsonResult<Product>> {
+    return this.http.put<JsonResult<Product>>(this.baseApiUrl + `/api/products/update/${id}`, request);
+  }
+
+  delete(id: Guid) {
+    return this.http.delete(this.baseApiUrl + `/api/products/delete/${id}`);
   }
 }

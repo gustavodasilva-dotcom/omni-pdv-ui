@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
@@ -83,8 +83,8 @@ export class PosIndexComponent implements OnInit {
   private _setSalesValues() {
     this.salesService.getOpenedSale()
       .subscribe({
-        next: (sale: Sale) => {
-          this.sale = sale;
+        next: (result) => {
+          this.sale = result?.data;
           this._renderSaleProductsList();
         },
         error: (response: HttpErrorResponse | Error) => {
@@ -111,13 +111,13 @@ export class PosIndexComponent implements OnInit {
 
     this.salesService.deleteProductFromSale(product.order)
       .subscribe({
-        next: (sales) => {
+        next: (result) => {
           SwalToast.fire({
             icon: 'success',
             title: 'Product removed from list successfully'
           });
 
-          this.sale = sales;
+          this.sale = result.data;
           this._setSalesValues();
         },
         error: (response: HttpErrorResponse | Error) => {
@@ -156,13 +156,13 @@ export class PosIndexComponent implements OnInit {
   addProduct() {
     this.salesService.addProductToSale(this.addProjectToSaleRequest)
       .subscribe({
-        next: (sale) => {
+        next: (result) => {
           SwalToast.fire({
             icon: 'success',
             title: 'Product added successfully to the list'
           });
 
-          this.sale = sale;
+          this.sale = result.data;
           this._setSalesValues();
 
           this.inputBarcodeSearch.nativeElement.value = '';
@@ -190,8 +190,10 @@ export class PosIndexComponent implements OnInit {
       
       this.productsService.getProductByBarcode(barcode)
         .subscribe({
-          next: (product) => {
-            this.inputProductPrice.nativeElement.value = product.retail_price.toLocaleString('en', {
+          next: (result) => {
+            const data = result.data;
+
+            this.inputProductPrice.nativeElement.value = data.retail_price.toLocaleString('en', {
               minimumFractionDigits: 2
             });
             
@@ -199,9 +201,16 @@ export class PosIndexComponent implements OnInit {
             this.inputProductQuantity.nativeElement.focus();
           },
           error: (response: HttpErrorResponse | Error) => {
+            var message: string = response.message;
+
+            if (response instanceof HttpErrorResponse) {
+              if (response.status === HttpStatusCode.NotFound)
+                message = "Product not found";
+            }
+
             Swal.fire({
               title: 'Request error',
-              text: response?.message,
+              text: message,
               icon: 'error'
             });
           }
@@ -214,15 +223,18 @@ export class PosIndexComponent implements OnInit {
       size: 'lg',
       centered: true,
     });
-
-    modalRef.componentInstance.saveCallback = () => {
-      SwalToast.fire({
-        icon: 'success',
-        title: 'Discount added successfully'
-      });
-      
-      this._setSalesValues();
-    }
+    modalRef.componentInstance.prepare({
+      callbacks: {
+        save: () => {
+          SwalToast.fire({
+            icon: 'success',
+            title: 'Discount added successfully'
+          });
+          
+          this._setSalesValues();
+        }
+      }
+    });
   }
   
   async changeSaleStatus(status: SaleStatusEnum) {

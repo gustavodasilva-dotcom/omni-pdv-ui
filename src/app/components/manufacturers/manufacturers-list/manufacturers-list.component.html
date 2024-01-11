@@ -8,6 +8,7 @@
   <table class="table table-striped table-hover" *ngIf="manufacturers && manufacturers.length > 0">
     <thead>
       <tr>
+        <th>#</th>
         <th>Name</th>
         <th>CRN</th>
         <th>Active</th>
@@ -15,6 +16,16 @@
     </thead>
     <tbody>
       <tr *ngFor="let manufacturer of manufacturers">
+        <td>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" placement="top" ngbTooltip="Update product" (click)="update(manufacturer)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button type="button" class="btn btn-danger" placement="top" ngbTooltip="Delete product" (click)="delete(manufacturer)">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </div>
+        </td>
         <td>{{ manufacturer.name }}</td>
         <td>{{ manufacturer.crn }}</td>
         <td>{{ manufacturer.active ? "Yes" : "No" }}</td>
