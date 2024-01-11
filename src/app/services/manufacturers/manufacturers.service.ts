@@ -7,7 +7,7 @@ import { Manufacturer } from '../../models/manufacturer.model';
   providedIn: 'root'
 })
 export class ManufacturersService {
-  baseApiUrl: string = 'https://localhost:7048';
+  private baseApiUrl: string = 'https://localhost:7048';
 
   constructor(private http: HttpClient) { }
 

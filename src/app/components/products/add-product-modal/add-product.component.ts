@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { Manufacturer } from '../../../models/manufacturer.model';
 import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
@@ -10,7 +10,7 @@ import { ProductsService } from '../../../services/products/products.service';
 import SwalToast from '../../../libs/swal/SwalToast';
 
 @Component({
-  selector: 'app-add-product',
+  selector: 'app-add-product-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,8 +19,10 @@ import SwalToast from '../../../libs/swal/SwalToast';
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
-export class AddProductComponent implements OnInit {
+export class AddProductModalComponent implements OnInit {
   manufacturers: Manufacturer[] = [];
+
+  saveCallback: Function = () => { };
 
   productRequest = {
     name: '',
@@ -33,7 +35,7 @@ export class AddProductComponent implements OnInit {
   };
 
   constructor(
-    private router: Router,
+    public activeModal: NgbActiveModal,
     private productsService: ProductsService,
     private manufacturersService: ManufacturersService
   ) { }
@@ -54,12 +56,13 @@ export class AddProductComponent implements OnInit {
     this.productsService.addProduct(this.productRequest)
       .subscribe({
         next: async () => {
-          await SwalToast.fire({
+          SwalToast.fire({
             icon: 'success',
             title: 'Product added successfully'
           });
           
-          this.router.navigate(['/products']);
+          this.activeModal.close();
+          this.saveCallback();
         },
         error: (response: HttpErrorResponse | Error) => {
           Swal.fire({

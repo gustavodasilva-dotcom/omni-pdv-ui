@@ -11,6 +11,7 @@ import { ProductsService } from '../../../services/products/products.service';
 import { PosProductListItemComponent } from '../pos-product-list-item/pos-product-list-item.component';
 import SwalToast from '../../../libs/swal/SwalToast';
 import { PosDiscountModalComponent } from '../pos-discount-modal/pos-discount-modal.component';
+import { SaleStatusEnum } from '../../../models/enums/sale-status.enum';
 
 @Component({
   selector: 'app-pos-index',
@@ -30,6 +31,8 @@ export class PosIndexComponent implements OnInit {
   @ViewChild('saleProductContainer', { read: ViewContainerRef }) saleProductContainer: ViewContainerRef;
 
   sale: Sale | undefined;
+
+  saleStatusEnum: typeof SaleStatusEnum = SaleStatusEnum;
 
   addProjectToSaleRequest = {
     barcode: '',
@@ -78,7 +81,7 @@ export class PosIndexComponent implements OnInit {
   }
 
   private _setSalesValues() {
-    this.salesService.getOpenSale()
+    this.salesService.getOpenedSale()
       .subscribe({
         next: (sale: Sale) => {
           this.sale = sale;
@@ -220,5 +223,39 @@ export class PosIndexComponent implements OnInit {
       
       this._setSalesValues();
     }
+  }
+  
+  async changeSaleStatus(status: SaleStatusEnum) {
+    const dialog = await Swal.fire({
+      title: 'Wait...',
+      icon: 'warning',
+      text: `Do you really want to ${status === SaleStatusEnum.Closed ? 'close' : 'cancel'} this sale?`,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    });
+
+    if (!dialog.isConfirmed)
+      return;
+
+    this.salesService.changeOpenedSaleStatus({
+      status: SaleStatusEnum.Cancelled
+    })
+      .subscribe({
+        next: () => {          
+          SwalToast.fire({
+            icon: 'success',
+            title: `Sale ${status === SaleStatusEnum.Closed ? 'closed' : 'cancelled'} successfully`
+          });
+
+          this._setSalesValues();
+        },
+        error: (response: HttpErrorResponse | Error) => {
+          Swal.fire({
+            title: 'Request error',
+            text: response?.message,
+            icon: 'error'
+          });
+        }        
+      });
   }
 }
