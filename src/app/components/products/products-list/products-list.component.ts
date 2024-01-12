@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Product } from '../../../models/product.model';
 import { ProductsService } from '../../../services/products/products.service';
 import { AddProductModalComponent } from '../add-product-modal/add-product-modal.component';
-import SwalToast from '../../../libs/swal/SwalToast';
+import { SwalToast } from '../../../libs/swal';
 
 @Component({
   selector: 'app-products-list',
@@ -34,7 +34,7 @@ export class ProductsListComponent implements OnInit {
     this.productsService.getAll()
       .subscribe({
         next: (result) => {
-          this.products = result.data;
+          this.products = result?.data;
         },
         error: (response: HttpErrorResponse | Error) => {
           Swal.fire({

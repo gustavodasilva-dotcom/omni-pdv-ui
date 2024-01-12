@@ -1,7 +1,6 @@
 import { DiscountTypeEnum } from './enums/discount-type-enum';
 
-export interface Discount
-{
+export interface Discount {
   type: DiscountTypeEnum,
   value: number
 }

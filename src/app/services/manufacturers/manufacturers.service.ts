@@ -14,19 +14,14 @@ export class ManufacturersService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<JsonResult<Manufacturer[]>> {
-    return this.http.get<JsonResult<Manufacturer[]>>(this.baseApiUrl + '/api/manufacturers/get-all');
-  }
+  getAll = (): Observable<JsonResult<Manufacturer[]>> =>
+    this.http.get<JsonResult<Manufacturer[]>>(this.baseApiUrl + '/api/manufacturers/get-all');
 
-  add(request: ManufacturerModel): Observable<JsonResult<Manufacturer>> {
-    return this.http.post<JsonResult<Manufacturer>>(this.baseApiUrl + '/api/manufacturers/add', request);
-  }
+  add = (request: ManufacturerModel): Observable<JsonResult<Manufacturer>> =>
+    this.http.post<JsonResult<Manufacturer>>(this.baseApiUrl + '/api/manufacturers/add', request);
 
-  update(id: string, request: ManufacturerModel): Observable<JsonResult<Manufacturer>> {
-    return this.http.put<JsonResult<Manufacturer>>(this.baseApiUrl + `/api/manufacturers/update/${id}`, request);
-  }
+  update = (id: string, request: ManufacturerModel): Observable<JsonResult<Manufacturer>> =>
+    this.http.put<JsonResult<Manufacturer>>(this.baseApiUrl + `/api/manufacturers/update/${id}`, request);
 
-  delete(id: Guid) {
-    return this.http.delete(this.baseApiUrl + `/api/manufacturers/delete/${id}`);
-  }
+  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/manufacturers/delete/${id}`);
 }

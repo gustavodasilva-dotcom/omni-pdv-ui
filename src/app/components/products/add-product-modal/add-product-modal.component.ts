@@ -5,11 +5,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
 import { Manufacturer } from '../../../models/manufacturer.model';
 import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
 import { ProductsService } from '../../../services/products/products.service';
-import SwalToast from '../../../libs/swal/SwalToast';
-import { Observable } from 'rxjs';
+import { SwalToast } from '../../../libs/swal';
 import { JsonResult } from '../../../models/http/json-result.model';
 import { Product } from '../../../models/product.model';
 import { DefaultOptions } from './models/default-options.model';
@@ -67,7 +67,7 @@ export class AddProductModalComponent implements OnInit {
     this.options = { ...defaultOptions, ...options };
   }
 
-  addProduct() {
+  saveProduct() {
     var request: Observable<JsonResult<Product>>;
     var message: string;
 

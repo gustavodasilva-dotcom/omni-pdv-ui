@@ -9,7 +9,7 @@ import { SaleProduct } from '../../../models/sale-product.model';
 import { SalesService } from '../../../services/sales/sales.service';
 import { ProductsService } from '../../../services/products/products.service';
 import { PosProductListItemComponent } from '../pos-product-list-item/pos-product-list-item.component';
-import SwalToast from '../../../libs/swal/SwalToast';
+import { SwalToast } from '../../../libs/swal';
 import { PosDiscountModalComponent } from '../pos-discount-modal/pos-discount-modal.component';
 import { SaleStatusEnum } from '../../../models/enums/sale-status.enum';
 

@@ -1,29 +1,29 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
-import { Manufacturer } from '../../../models/manufacturer.model';
-import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
-import { AddManufacturerModalComponent } from '../add-manufacturer-modal/add-manufacturer-modal.component';
+import { Client } from '../../../models/client.model';
+import { ClientsService } from '../../../services/clients/clients.service';
+import { AddClientModalComponent } from '../add-client-modal/add-client-modal.component';
 import { SwalToast } from '../../../libs/swal';
 
 @Component({
-  selector: 'app-manufacturers-list',
+  selector: 'app-clients-list',
   standalone: true,
   imports: [
     CommonModule,
     NgbTooltip
   ],
-  templateUrl: './manufacturers-list.component.html',
-  styleUrl: './manufacturers-list.component.css'
+  templateUrl: './clients-list.component.html',
+  styleUrl: './clients-list.component.css'
 })
-export class ManufacturersListComponent implements OnInit {
-  manufacturers: Manufacturer[] = [];
+export class ClientsListComponent implements OnInit {
+  clients: Client[] = [];
 
   constructor(
     private modalService: NgbModal,
-    private manufacturersService: ManufacturersService
+    private clientsService: ClientsService
   ) { }
 
   ngOnInit(): void {
@@ -31,10 +31,10 @@ export class ManufacturersListComponent implements OnInit {
   }
 
   loadData() {
-    this.manufacturersService.getAll()
+    this.clientsService.getAll()
       .subscribe({
         next: (result) => {
-          this.manufacturers = result?.data;
+          this.clients = result?.data;
         },
         error: (response: HttpErrorResponse | Error) => {
           Swal.fire({
@@ -47,7 +47,7 @@ export class ManufacturersListComponent implements OnInit {
   }
 
   openModal() {
-    const modalRef = this.modalService.open(AddManufacturerModalComponent, {
+    const modalRef = this.modalService.open(AddClientModalComponent, {
       centered: true,
     });
     modalRef.componentInstance.prepare({
@@ -57,16 +57,17 @@ export class ManufacturersListComponent implements OnInit {
     });
   }
 
-  update(manufacturer: Manufacturer) {
-    const modalRef = this.modalService.open(AddManufacturerModalComponent, {
+  update(client: Client) {
+    const modalRef = this.modalService.open(AddClientModalComponent, {
       centered: true,
     });    
     modalRef.componentInstance.prepare({
-      id: manufacturer.id,
+      id: client.id,
       model: {
-        name: manufacturer.name,
-        crn: manufacturer.crn,
-        active: manufacturer.active
+        name: client.name,
+        ssn: client.ssn,
+        birthday: client.birthday,
+        active: client.active
       },
       callbacks: {
         save: () => this.loadData()
@@ -74,11 +75,11 @@ export class ManufacturersListComponent implements OnInit {
     });
   }
 
-  async delete(manufacturer: Manufacturer) {
+  async delete(client: Client) {
     const dialog = await Swal.fire({
       title: 'Wait...',
       icon: 'warning',
-      text: 'Do you really want to delete this manufacturer?',
+      text: 'Do you really want to delete this client?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
     });
@@ -86,12 +87,12 @@ export class ManufacturersListComponent implements OnInit {
     if (!dialog.isConfirmed)
       return;
 
-    this.manufacturersService.delete(manufacturer.id)
+    this.clientsService.delete(client.id)
       .subscribe({
         next: () => {
           SwalToast.fire({
             icon: 'success',
-            title: 'Manufacturer deleted successfully'
+            title: 'Client deleted successfully'
           });
           
           this.loadData();

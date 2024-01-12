@@ -3,7 +3,7 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
-  <form #form="ngForm" (ngSubmit)="addProduct()">
+  <form #form="ngForm" (ngSubmit)="saveProduct()">
     <div class="row">
       <div class="col mb-3">
         <label for="inputProductName" class="form-label">

@@ -1,33 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
 import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { ManufacturersService } from '../../../services/manufacturers/manufacturers.service';
-import { SwalToast } from '../../../libs/swal';
+import { ClientsService } from '../../../services/clients/clients.service';
 import { DefaultOptions } from './models/default-options.model';
 import { JsonResult } from '../../../models/http/json-result.model';
-import { Manufacturer } from '../../../models/manufacturer.model';
+import { Client } from '../../../models/client.model';
+import { SwalToast } from '../../../libs/swal';
+import { getDateFromISOString } from '../../../libs/date';
 
 @Component({
-  selector: 'app-add-manufacturer-modal',
+  selector: 'app-add-client-modal',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule
   ],
-  templateUrl: './add-manufacturer-modal.component.html',
-  styleUrl: './add-manufacturer-modal.component.css'
+  templateUrl: './add-client-modal.component.html',
+  styleUrl: './add-client-modal.component.css'
 })
-export class AddManufacturerModalComponent {
+export class AddClientModalComponent {
   options: DefaultOptions;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private manufacturersService: ManufacturersService
+    private clientsService: ClientsService
   ) { }
 
   prepare(options: DefaultOptions) {
@@ -35,7 +36,8 @@ export class AddManufacturerModalComponent {
       id: Guid.EMPTY,
       model: {
         name: '',
-        crn: '',
+        ssn: '',
+        birthday: getDateFromISOString(),
         active: true
       },
       callbacks: {
@@ -44,22 +46,24 @@ export class AddManufacturerModalComponent {
       }
     };
     this.options = { ...defaultOptions, ...options };
+
+    this.options.model.birthday = getDateFromISOString(this.options.model.birthday);
   }
 
-  saveManufacturer() {
-    var request: Observable<JsonResult<Manufacturer>>;
+  saveClient() {
+    var request: Observable<JsonResult<Client>>;
     var message: string;
 
     if (this.options.id === Guid.EMPTY) {
-      request = this.manufacturersService.add(this.options.model);
-      message = 'Manufacturer updated successfully';
+      request = this.clientsService.add(this.options.model);
+      message = 'Client added successfully';
     } else {
-      request = this.manufacturersService.update(this.options.id, this.options.model);
-      message = 'Manufacturer updated successfully';
+      request = this.clientsService.update(this.options.id, this.options.model);
+      message = 'Client updated successfully';
     }
 
     request.subscribe({
-      next: async () => {
+      next: () => {
         SwalToast.fire({
           icon: 'success',
           title: message

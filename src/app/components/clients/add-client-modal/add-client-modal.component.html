@@ -1,32 +1,47 @@
 <div class="modal-header">
-  <h4 class="modal-title">Add new manufacturer</h4>
+  <h4 class="modal-title">Add new client</h4>
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
-  <form #form="ngForm" (ngSubmit)="saveManufacturer()">
+  <form #form="ngForm" (ngSubmit)="saveClient()">
     <div class="row">
       <div class="col mb-3">
-        <label for="inputManufacturerName" class="form-label">
+        <label for="inputClientName" class="form-label">
           Name
         </label>
         <input
           type="text"
           class="form-control"
-          id="inputManufacturerName"
+          id="inputClientName"
           name="name"
           [(ngModel)]="options.model.name"
         />
       </div>
       <div class="col mb-3">
-        <label for="inputManufacturerCrn" class="form-label">
-          CRN
+        <label for="inputClientSsn" class="form-label">
+          SSN
         </label>
         <input
           type="text"
           class="form-control"
-          id="inputManufacturerCrn"
-          name="crn"
-          [(ngModel)]="options.model.crn"
+          id="inputClientSsn"
+          name="ssn"
+          [(ngModel)]="options.model.ssn"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mb-3">
+        <label for="inputClientBirthday" class="form-label">
+          Birthday
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          id="inputClientBirthday"
+          name="birthday"
+          [(ngModel)]="options.model.birthday"
+          pattern="\d{4}-\d{2}-\d{2}"
         />
       </div>
     </div>
@@ -34,11 +49,11 @@
       <input
         type="checkbox"
         class="form-check-input"
-        id="inputManufacturerActive"
+        id="inputClientActive"
         name="active"
         [(ngModel)]="options.model.active"
       />
-      <label class="form-check-label" for="inputManufacturerActive">
+      <label class="form-check-label" for="inputClientActive">
         Active
       </label>
     </div>

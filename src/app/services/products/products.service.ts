@@ -13,23 +13,17 @@ export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<JsonResult<Product[]>> {
-    return this.http.get<JsonResult<Product[]>>(this.baseApiUrl + '/api/products/get-all');
-  }
+  getAll = (): Observable<JsonResult<Product[]>> =>
+    this.http.get<JsonResult<Product[]>>(this.baseApiUrl + '/api/products/get-all');
 
-  getProductByBarcode(barcode: string): Observable<JsonResult<Product>> {
-    return this.http.get<JsonResult<Product>>(this.baseApiUrl + '/api/products/get-by-barcode/' + barcode);
-  }
+  getProductByBarcode = (barcode: string): Observable<JsonResult<Product>> =>
+    this.http.get<JsonResult<Product>>(this.baseApiUrl + '/api/products/get-by-barcode/' + barcode);
 
-  add(request: Object): Observable<JsonResult<Product>> {
-    return this.http.post<JsonResult<Product>>(this.baseApiUrl + '/api/products/add', request);
-  }
+  add = (request: Object): Observable<JsonResult<Product>> =>
+    this.http.post<JsonResult<Product>>(this.baseApiUrl + '/api/products/add', request);
 
-  update(id: string, request: Object): Observable<JsonResult<Product>> {
-    return this.http.put<JsonResult<Product>>(this.baseApiUrl + `/api/products/update/${id}`, request);
-  }
+  update = (id: string, request: Object): Observable<JsonResult<Product>> =>
+    this.http.put<JsonResult<Product>>(this.baseApiUrl + `/api/products/update/${id}`, request);
 
-  delete(id: Guid) {
-    return this.http.delete(this.baseApiUrl + `/api/products/delete/${id}`);
-  }
+  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/products/delete/${id}`);
 }
