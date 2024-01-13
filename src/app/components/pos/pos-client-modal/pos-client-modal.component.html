@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h4 class="modal-title">Client</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="input-group">
+      <select class="form-select" name="client_id" [(ngModel)]="options.model.client_id">
+        <option selected [value]="emptyGuid">Select a client</option>
+        <option *ngFor="let client of clients" [value]="client.id">
+          {{ client.name }}
+        </option>
+      </select>
+      <button class="btn btn-outline-secondary" type="button" placement="top" ngbTooltip="Add new client" (click)="openClientModal()">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+  <button type="button" class="btn btn-primary" (click)="saveClient()">Save client</button>
+</div>

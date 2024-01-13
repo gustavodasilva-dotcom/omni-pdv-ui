@@ -12,6 +12,8 @@ import { PosProductListItemComponent } from '../pos-product-list-item/pos-produc
 import { SwalToast } from '../../../libs/swal';
 import { PosDiscountModalComponent } from '../pos-discount-modal/pos-discount-modal.component';
 import { SaleStatusEnum } from '../../../models/enums/sale-status.enum';
+import { PosClientModalComponent } from '../pos-client-modal/pos-client-modal.component';
+import { AddProductRequestToSale } from '../../../services/sales/models/add-product-to-sale.model';
 
 @Component({
   selector: 'app-pos-index',
@@ -34,7 +36,7 @@ export class PosIndexComponent implements OnInit {
 
   saleStatusEnum: typeof SaleStatusEnum = SaleStatusEnum;
 
-  addProjectToSaleRequest = {
+  addProjectToSaleRequest: AddProductRequestToSale = {
     barcode: '',
     quantity: 0
   };
@@ -229,6 +231,28 @@ export class PosIndexComponent implements OnInit {
           SwalToast.fire({
             icon: 'success',
             title: 'Discount added successfully'
+          });
+          
+          this._setSalesValues();
+        }
+      }
+    });
+  }
+
+  openClientModal() {
+    const modalRef = this.modalService.open(PosClientModalComponent, {
+      size: 'md',
+      centered: true
+    });
+    modalRef.componentInstance.prepare({
+      model: {
+        client_id: this.sale?.client.id
+      },
+      callbacks: {
+        save: () => {
+          SwalToast.fire({
+            icon: 'success',
+            title: 'Client added successfully'
           });
           
           this._setSalesValues();

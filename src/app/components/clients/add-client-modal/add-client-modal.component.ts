@@ -41,7 +41,7 @@ export class AddClientModalComponent {
         active: true
       },
       callbacks: {
-        save: () => {},
+        save: (_data: Client) => {},
         cancel: () => {}
       }
     };
@@ -63,14 +63,14 @@ export class AddClientModalComponent {
     }
 
     request.subscribe({
-      next: () => {
+      next: (result) => {
         SwalToast.fire({
           icon: 'success',
           title: message
         });
 
         this.activeModal.close();
-        this.options.callbacks.save();
+        this.options.callbacks.save(result.data);
       },
       error: (response: HttpErrorResponse | Error) => {
         Swal.fire({

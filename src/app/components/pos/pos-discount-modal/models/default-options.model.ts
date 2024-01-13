@@ -1,4 +1,4 @@
-import { Discount } from '../../../../models/discount.model'
+import { AddDiscountToSale } from '../../../../services/sales/models/add-discount-to-sale.model'
 
 interface DefaultOptionsCallback {
   save: Function,
@@ -6,6 +6,6 @@ interface DefaultOptionsCallback {
 };
 
 export interface DefaultOptions {
-  model: Discount,
+  model: AddDiscountToSale,
   callbacks: DefaultOptionsCallback
 };

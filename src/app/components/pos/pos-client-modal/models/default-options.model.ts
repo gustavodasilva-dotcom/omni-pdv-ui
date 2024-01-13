@@ -1,4 +1,4 @@
-import { SaveClient } from '../../../../services/clients/models/save-client.model'
+import { AddClientToSale } from '../../../../services/sales/models/add-client-to-sale.model'
 
 interface DefaultOptionsCallback {
   save: Function,
@@ -6,7 +6,6 @@ interface DefaultOptionsCallback {
 };
 
 export interface DefaultOptions {
-  id: string,
-  model: SaveClient,
+  model: AddClientToSale,
   callbacks: DefaultOptionsCallback
 };

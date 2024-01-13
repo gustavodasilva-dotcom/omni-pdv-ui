@@ -39,10 +39,14 @@ export class AddProductModalComponent implements OnInit {
     this.manufacturersService.getAll()
       .subscribe({
         next: (result) => {
-          this.manufacturers = result.data;
+          this.manufacturers = result.data ?? [];
         },
-        error: (response) => {
-          console.error(response);
+        error: (response: HttpErrorResponse | Error) => {
+          Swal.fire({
+            title: 'Request error',
+            text: response?.message,
+            icon: 'error'
+          });
         }
       });
   }

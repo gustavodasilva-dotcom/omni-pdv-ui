@@ -1,16 +1,12 @@
+import { SaveManufacturer } from '../../../../services/manufacturers/models/save-manufacturer.model'
+
 interface DefaultOptionsCallback {
   save: Function,
   cancel: Function
 };
 
-export interface ManufacturerModel {
-  name: string,
-  crn: string,
-  active: true
-};
-
 export interface DefaultOptions {
   id: string,
-  model: ManufacturerModel,
+  model: SaveManufacturer,
   callbacks: DefaultOptionsCallback
 };

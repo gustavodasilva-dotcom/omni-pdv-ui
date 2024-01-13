@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { Manufacturer } from '../../models/manufacturer.model'
 import { JsonResult } from '../../models/http/json-result.model'
-import { ManufacturerModel } from '../../components/manufacturers/add-manufacturer-modal/models/default-options.model'
 import { Guid } from 'guid-typescript'
+import { SaveManufacturer } from './models/save-manufacturer.model'
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +17,10 @@ export class ManufacturersService {
   getAll = (): Observable<JsonResult<Manufacturer[]>> =>
     this.http.get<JsonResult<Manufacturer[]>>(this.baseApiUrl + '/api/manufacturers/get-all');
 
-  add = (request: ManufacturerModel): Observable<JsonResult<Manufacturer>> =>
+  add = (request: SaveManufacturer): Observable<JsonResult<Manufacturer>> =>
     this.http.post<JsonResult<Manufacturer>>(this.baseApiUrl + '/api/manufacturers/add', request);
 
-  update = (id: string, request: ManufacturerModel): Observable<JsonResult<Manufacturer>> =>
+  update = (id: string, request: SaveManufacturer): Observable<JsonResult<Manufacturer>> =>
     this.http.put<JsonResult<Manufacturer>>(this.baseApiUrl + `/api/manufacturers/update/${id}`, request);
 
   delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/manufacturers/delete/${id}`);
