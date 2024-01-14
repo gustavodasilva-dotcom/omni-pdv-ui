@@ -4,6 +4,7 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Sale } from '../../../models/sale.model';
 import { SaleProduct } from '../../../models/sale-product.model';
 import { SalesService } from '../../../services/sales/sales.service';
@@ -26,26 +27,77 @@ import { AddProductRequestToSale } from '../../../services/sales/models/add-prod
   styleUrl: './pos-index.component.css'
 })
 export class PosIndexComponent implements OnInit {
+  sale: Sale | null;  
+  addProjectToSaleRequest: AddProductRequestToSale;
+  saleStatusEnum: typeof SaleStatusEnum = SaleStatusEnum;
+  
   @ViewChild('inputBarcodeSearch') inputBarcodeSearch: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductPrice') inputProductPrice: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductQuantity') inputProductQuantity: ElementRef<HTMLInputElement>;
   @ViewChild('inputProductTotalPrice') inputProductTotalPrice: ElementRef<HTMLInputElement>;
   @ViewChild('saleProductContainer', { read: ViewContainerRef }) saleProductContainer: ViewContainerRef;
 
-  sale: Sale | undefined;
-
-  saleStatusEnum: typeof SaleStatusEnum = SaleStatusEnum;
-
-  addProjectToSaleRequest: AddProductRequestToSale = {
-    barcode: '',
-    quantity: 0
-  };
-
   constructor(
     private salesService: SalesService,
     private productsService: ProductsService,
-    private modalService: NgbModal
-  ) { }
+    private modalService: NgbModal,
+    private hotkeysService: HotkeysService
+  ) {
+    this.hotkeysService.add(
+      [
+        new Hotkey(
+          'f1',
+          (): boolean => {
+            this.openDiscountModal()
+            return false;
+          },
+          ['INPUT', 'TEXTAREA', 'SELECT'],
+          'open discount modal'
+        ),
+        new Hotkey(
+          'f2',
+          (): boolean => {
+            this.openClientModal()
+            return false;
+          },
+          ['INPUT', 'TEXTAREA', 'SELECT'],
+          'open client modal'
+        ),
+        new Hotkey(
+          'f3',
+          (): boolean => {
+            alert('Under construction! Please, come back later.');
+            return false;
+          },
+          ['INPUT', 'TEXTAREA', 'SELECT'],
+          'open payment modal'
+        ),
+        new Hotkey(
+          'f4',
+          (): boolean => {
+            this.changeSaleStatus(SaleStatusEnum.Closed);
+            return false;
+          },
+          ['INPUT', 'TEXTAREA', 'SELECT'],
+          'finish sale'
+        ),
+        new Hotkey(
+          'f5',
+          (): boolean => {
+            this.changeSaleStatus(SaleStatusEnum.Cancelled);
+            return false;
+          },
+          ['INPUT', 'TEXTAREA', 'SELECT'],
+          'cancel sale'
+        )
+      ]
+    );
+
+    this.addProjectToSaleRequest = {
+      barcode: '',
+      quantity: 0
+    };
+  }
 
   ngOnInit(): void {
     this._setSalesValues();
@@ -90,9 +142,15 @@ export class PosIndexComponent implements OnInit {
           this._renderSaleProductsList();
         },
         error: (response: HttpErrorResponse | Error) => {
+          var message: string = response?.message ??
+            'An error occurred while communicating with the API';
+          
+          if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
+
           Swal.fire({
             title: 'Request error',
-            text: response?.message,
+            text: message,
             icon: 'error'
           });
         }
@@ -123,9 +181,15 @@ export class PosIndexComponent implements OnInit {
           this._setSalesValues();
         },
         error: (response: HttpErrorResponse | Error) => {
+          var message: string = response?.message ??
+            'An error occurred while communicating with the API';
+          
+          if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
+
           Swal.fire({
             title: 'Request error',
-            text: response?.message,
+            text: message,
             icon: 'error'
           });
         }
@@ -167,17 +231,26 @@ export class PosIndexComponent implements OnInit {
           this.sale = result.data;
           this._setSalesValues();
 
-          this.inputBarcodeSearch.nativeElement.value = '';
+          this.addProjectToSaleRequest = {
+            barcode: '',
+            quantity: 0
+          };
+
           this.inputProductPrice.nativeElement.value = '';
-          this.inputProductQuantity.nativeElement.value = '';
           this.inputProductTotalPrice.nativeElement.value = '';
           
           this.inputBarcodeSearch.nativeElement.focus();
         },
         error: (response: HttpErrorResponse | Error) => {
+          var message: string = response?.message ??
+            'An error occurred while communicating with the API';
+          
+          if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
+
           Swal.fire({
             title: 'Request error',
-            text: response?.message,
+            text: message,
             icon: 'error'
           });
         }
@@ -189,6 +262,16 @@ export class PosIndexComponent implements OnInit {
       e.preventDefault();
 
       const barcode = (e.target as HTMLInputElement)?.value;
+
+      if (!barcode) {
+        Swal.fire({
+          title: 'Invalid operation',
+          text: 'Search argument cannot be empty',
+          icon: 'error'
+        });
+
+        return;
+      }
       
       this.productsService.getProductByBarcode(barcode)
         .subscribe({
@@ -198,17 +281,18 @@ export class PosIndexComponent implements OnInit {
             this.inputProductPrice.nativeElement.value = data.retail_price.toLocaleString('en', {
               minimumFractionDigits: 2
             });
+
+            this.addProjectToSaleRequest.quantity = 1;
             
             this.calculateTotalPrice();
             this.inputProductQuantity.nativeElement.focus();
           },
           error: (response: HttpErrorResponse | Error) => {
-            var message: string = response.message;
-
-            if (response instanceof HttpErrorResponse) {
-              if (response.status === HttpStatusCode.NotFound)
-                message = "Product not found";
-            }
+            var message: string = response?.message ??
+              'An error occurred while communicating with the API';
+          
+            if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
 
             Swal.fire({
               title: 'Request error',
@@ -220,7 +304,24 @@ export class PosIndexComponent implements OnInit {
     }
   }
 
+  private isSaleOpened() {
+    if (!this.sale) {
+      Swal.fire({
+        title: 'Invalid operation',
+        text: 'For this operation, there has to be an open sale',
+        icon: 'error'
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
   openDiscountModal() {
+    if (!this.isSaleOpened())
+      return;
+
     const modalRef = this.modalService.open(PosDiscountModalComponent, {
       size: 'lg',
       centered: true,
@@ -240,6 +341,9 @@ export class PosIndexComponent implements OnInit {
   }
 
   openClientModal() {
+    if (!this.isSaleOpened())
+      return;
+
     const modalRef = this.modalService.open(PosClientModalComponent, {
       size: 'md',
       centered: true
@@ -262,10 +366,13 @@ export class PosIndexComponent implements OnInit {
   }
   
   async changeSaleStatus(status: SaleStatusEnum) {
+    if (!this.isSaleOpened())
+      return;
+
     const dialog = await Swal.fire({
       title: 'Wait...',
       icon: 'warning',
-      text: `Do you really want to ${status === SaleStatusEnum.Closed ? 'close' : 'cancel'} this sale?`,
+      text: `Do you really want to ${status === SaleStatusEnum.Closed ? 'finish' : 'cancel'} this sale?`,
       showCancelButton: true,
       confirmButtonText: 'Yes',
     });
@@ -278,20 +385,26 @@ export class PosIndexComponent implements OnInit {
     })
       .subscribe({
         next: () => {          
+          this._setSalesValues();
+          
           SwalToast.fire({
             icon: 'success',
-            title: `Sale ${status === SaleStatusEnum.Closed ? 'closed' : 'cancelled'} successfully`
+            title: `Sale ${status === SaleStatusEnum.Closed ? 'finished' : 'cancelled'} successfully`
           });
-
-          this._setSalesValues();
         },
         error: (response: HttpErrorResponse | Error) => {
+          var message: string = response?.message ??
+            'An error occurred while communicating with the API';
+          
+          if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
+
           Swal.fire({
             title: 'Request error',
-            text: response?.message,
+            text: message,
             icon: 'error'
           });
-        }        
+        }
       });
   }
 }

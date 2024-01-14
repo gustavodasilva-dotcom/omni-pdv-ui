@@ -45,7 +45,7 @@
           />
         </div>
         <div class="col-md-2 d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary">Add product</button>
+          <button type="submit" class="btn btn-primary">Add product (Enter)</button>
         </div>
       </div>
     </form>
@@ -88,7 +88,7 @@
       <div class="d-grid gap-2 border rounded p-2 mb-2">
         <div class="d-flex justify-content-between align-items-baseline">
           <span class="h4">Client:</span>
-          <span class="h5">{{ sale?.client?.name }}</span>
+          <span class="h5">{{ sale?.client?.name ?? "-" }}</span>
         </div>
       </div>
     </div>
@@ -96,15 +96,15 @@
       <div class="d-flex justify-content-center gap-2">
         <button class="btn btn-primary" type="button" (click)="openDiscountModal()">
           <i class="bi bi-tag-fill"></i>
-          Discount
+          Discount (F1)
         </button>
         <button class="btn btn-primary" type="button" (click)="openClientModal()">
           <i class="bi bi-person-badge"></i>
-          Client
+          Client (F2)
         </button>
         <button class="btn btn-primary" type="button">
           <i class="bi bi-credit-card-2-back-fill"></i>
-          Payment
+          Payment (F3)
         </button>
       </div>
     </div>
@@ -112,11 +112,11 @@
       <div class="d-flex justify-content-center gap-2">
         <button class="btn btn-success" type="button" (click)="changeSaleStatus(saleStatusEnum.Closed)">
           <i class="bi bi-cart-check-fill"></i>
-          Finish sale
+          Finish sale (F4)
         </button>
         <button class="btn btn-danger" type="button" (click)="changeSaleStatus(saleStatusEnum.Cancelled)">
           <i class="bi bi-cart-x-fill"></i>
-          Cancel sale
+          Cancel sale (F5)
         </button>
       </div>
     </div>
