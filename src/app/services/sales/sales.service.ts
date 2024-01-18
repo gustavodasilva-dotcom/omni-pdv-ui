@@ -1,18 +1,20 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
+import { environment } from '../../../environments/environment.development'
 import { Sale } from '../../models/sale.model'
 import { JsonResult } from '../../models/http/json-result.model'
 import { AddProductRequestToSale } from './models/add-product-to-sale.model'
 import { ChangeSaleStatus } from './models/change-sale-status.model'
 import { AddDiscountToSale } from './models/add-discount-to-sale.model'
 import { AddClientToSale } from './models/add-client-to-sale.model'
+import { SendReceiptToEmail } from './models/send-receipt-email.mode'
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalesService {
-  private baseApiUrl: string = 'https://localhost:7048';
+  private baseApiUrl: string = environment.baseApiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -24,6 +26,9 @@ export class SalesService {
 
   changeOpenedSaleStatus = (request: ChangeSaleStatus): Observable<JsonResult<Sale | undefined>> =>
     this.http.put<JsonResult<Sale | undefined>>(this.baseApiUrl + '/api/point-of-sales/change-opened-sale-status', request);
+
+  sendReceiptToEmail = (request: SendReceiptToEmail) =>
+    this.http.put(this.baseApiUrl + '/api/point-of-sales/send-receipt-email', request);
 
   addDiscountToSale = (request: AddDiscountToSale): Observable<JsonResult<Sale>> =>
     this.http.patch<JsonResult<Sale>>(this.baseApiUrl + `/api/point-of-sales/add-discount`, request);

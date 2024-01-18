@@ -7,6 +7,7 @@ import { Client } from '../../../models/client.model';
 import { ClientsService } from '../../../services/clients/clients.service';
 import { AddClientModalComponent } from '../add-client-modal/add-client-modal.component';
 import { SwalToast } from '../../../libs/swal';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-clients-list',
@@ -58,6 +59,15 @@ export class ClientsListComponent implements OnInit {
   }
 
   update(client: Client) {
+    if (client.ssn === environment.defaultClient.ssn) {
+      Swal.fire({
+        title: 'Invalid operation',
+        text: 'This data cannot be updated',
+        icon: 'error'
+      });
+      return;
+    }
+
     const modalRef = this.modalService.open(AddClientModalComponent, {
       centered: true,
     });    
@@ -67,6 +77,7 @@ export class ClientsListComponent implements OnInit {
         name: client.name,
         ssn: client.ssn,
         birthday: client.birthday,
+        email: client.email,
         active: client.active
       },
       callbacks: {
@@ -76,6 +87,15 @@ export class ClientsListComponent implements OnInit {
   }
 
   async delete(client: Client) {
+    if (client.ssn === environment.defaultClient.ssn) {
+      Swal.fire({
+        title: 'Invalid operation',
+        text: 'This data cannot be deleted',
+        icon: 'error'
+      });
+      return;
+    }
+
     const dialog = await Swal.fire({
       title: 'Wait...',
       icon: 'warning',

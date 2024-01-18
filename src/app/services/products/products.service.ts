@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product } from '../../models/product.model';
 import { Observable } from 'rxjs';
-import { JsonResult } from '../../models/http/json-result.model';
 import { Guid } from 'guid-typescript';
+import { environment } from '../../../environments/environment.development';
+import { Product } from '../../models/product.model';
+import { JsonResult } from '../../models/http/json-result.model';
 import { SaveProduct } from './models/save-product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
-  private baseApiUrl: string = 'https://localhost:7048';
+  private baseApiUrl: string = environment.baseApiUrl;
 
   constructor(private http: HttpClient) { }
 

@@ -44,6 +44,18 @@
           pattern="\d{4}-\d{2}-\d{2}"
         />
       </div>
+      <div class="col mb-3">
+        <label for="inputClientEmail" class="form-label">
+          Email
+        </label>
+        <input
+          type="email"
+          class="form-control"
+          id="inputClientEmail"
+          name="email"
+          [(ngModel)]="options.model.email"
+        />
+      </div>
     </div>
     <div class="mb-3 form-check">
       <input

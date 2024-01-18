@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Guid } from 'guid-typescript';
+import { environment } from '../../../environments/environment.development';
 import { JsonResult } from '../../models/http/json-result.model';
 import { Client } from '../../models/client.model';
 import { SaveClient } from './models/save-client.model';
@@ -10,7 +11,7 @@ import { SaveClient } from './models/save-client.model';
   providedIn: 'root'
 })
 export class ClientsService {
-  private baseApiUrl: string = 'https://localhost:7048';
+  private baseApiUrl: string = environment.baseApiUrl;
 
   constructor(private http: HttpClient) { }
 

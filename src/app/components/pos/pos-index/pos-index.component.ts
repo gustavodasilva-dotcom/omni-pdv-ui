@@ -15,6 +15,8 @@ import { PosDiscountModalComponent } from '../pos-discount-modal/pos-discount-mo
 import { SaleStatusEnum } from '../../../models/enums/sale-status.enum';
 import { PosClientModalComponent } from '../pos-client-modal/pos-client-modal.component';
 import { AddProductRequestToSale } from '../../../services/sales/models/add-product-to-sale.model';
+import { environment } from '../../../../environments/environment.development';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-pos-index',
@@ -66,15 +68,6 @@ export class PosIndexComponent implements OnInit {
         new Hotkey(
           'f3',
           (): boolean => {
-            alert('Under construction! Please, come back later.');
-            return false;
-          },
-          ['INPUT', 'TEXTAREA', 'SELECT'],
-          'open payment modal'
-        ),
-        new Hotkey(
-          'f4',
-          (): boolean => {
             this.changeSaleStatus(SaleStatusEnum.Closed);
             return false;
           },
@@ -82,7 +75,7 @@ export class PosIndexComponent implements OnInit {
           'finish sale'
         ),
         new Hotkey(
-          'f5',
+          'f4',
           (): boolean => {
             this.changeSaleStatus(SaleStatusEnum.Cancelled);
             return false;
@@ -318,6 +311,58 @@ export class PosIndexComponent implements OnInit {
     return true;
   }
 
+  private async handleSaleReceipt() {
+    var emailToReceive = this.sale?.client.email;
+
+    const emptyEmailOrDefaultClient = !emailToReceive
+      || this.sale?.client.ssn === environment.defaultClient.ssn;
+
+    if (emptyEmailOrDefaultClient) {
+      const emailForm = await Swal.fire({
+        title: 'Send receipt to email',
+        input: 'email',
+        inputLabel: 'Please, inform the email that you wish to receive the receipt',
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Cancel',
+        showCancelButton: true,
+        reverseButtons: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      });
+
+      if (!emailForm.isConfirmed)
+        return;
+
+      emailToReceive = emailForm?.value;
+    }
+
+    this.salesService.sendReceiptToEmail({
+      sale_id: this.sale?.id ?? Guid.parse(Guid.EMPTY),
+      email: emailToReceive
+    })
+      .subscribe({
+        next: () => {
+          SwalToast.fire({
+            icon: 'success',
+            title: 'Receipt sent to email successfully'
+          });
+        },
+        error: (response: HttpErrorResponse | Error) => {
+          var message: string = response?.message ??
+            'An error occurred while communicating with the API';
+          
+          if (response instanceof HttpErrorResponse)
+              message = response.error?.data;
+
+          Swal.fire({
+            title: 'Request error',
+            text: message,
+            icon: 'error'
+          });
+        }
+      });
+  }
+
   openDiscountModal() {
     if (!this.isSaleOpened())
       return;
@@ -369,7 +414,7 @@ export class PosIndexComponent implements OnInit {
     if (!this.isSaleOpened())
       return;
 
-    const dialog = await Swal.fire({
+    const dialogStatus = await Swal.fire({
       title: 'Wait...',
       icon: 'warning',
       text: `Do you really want to ${status === SaleStatusEnum.Closed ? 'finish' : 'cancel'} this sale?`,
@@ -377,14 +422,23 @@ export class PosIndexComponent implements OnInit {
       confirmButtonText: 'Yes',
     });
 
-    if (!dialog.isConfirmed)
+    if (!dialogStatus.isConfirmed)
       return;
 
-    this.salesService.changeOpenedSaleStatus({
-      status: SaleStatusEnum.Cancelled
-    })
+    const dialogReceipt = await Swal.fire({
+      title: 'Before we continue...',
+      icon: 'question',
+      text: 'Would you want to send the sale receipt to an email?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    });
+
+    this.salesService.changeOpenedSaleStatus({ status })
       .subscribe({
-        next: () => {          
+        next: async () => {         
+          if (dialogReceipt.isConfirmed)
+            await this.handleSaleReceipt();
+          
           this._setSalesValues();
           
           SwalToast.fire({

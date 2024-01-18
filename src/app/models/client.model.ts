@@ -5,5 +5,6 @@ export interface Client {
   name: string,
   ssn: string,
   birthday: Date,
+  email: string | undefined,
   active: boolean
 };

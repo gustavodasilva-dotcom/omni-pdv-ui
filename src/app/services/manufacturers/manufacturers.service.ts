@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
+import { Guid } from 'guid-typescript'
+import { environment } from '../../../environments/environment.development'
 import { Manufacturer } from '../../models/manufacturer.model'
 import { JsonResult } from '../../models/http/json-result.model'
-import { Guid } from 'guid-typescript'
 import { SaveManufacturer } from './models/save-manufacturer.model'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManufacturersService {
-  private baseApiUrl: string = 'https://localhost:7048';
+  private baseApiUrl: string = environment.baseApiUrl;
 
   constructor(private http: HttpClient) { }
 

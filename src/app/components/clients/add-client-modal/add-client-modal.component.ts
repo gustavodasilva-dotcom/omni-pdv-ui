@@ -38,6 +38,7 @@ export class AddClientModalComponent {
         name: '',
         ssn: '',
         birthday: getDateFromISOString(),
+        email: '',
         active: true
       },
       callbacks: {

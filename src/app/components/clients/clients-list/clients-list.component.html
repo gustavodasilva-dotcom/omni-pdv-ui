@@ -12,6 +12,7 @@
         <th>Name</th>
         <th>SSN</th>
         <th>Birthday</th>
+        <th>Email</th>
         <th>Active</th>
       </tr>
     </thead>
@@ -30,6 +31,7 @@
         <td>{{ client.name }}</td>
         <td>{{ client.ssn }}</td>
         <td>{{ client.birthday.toString().split('T')[0] }}</td>
+        <td>{{ client.email }}</td>
         <td>{{ client.active ? "Yes" : "No" }}</td>
       </tr>
     </tbody>
