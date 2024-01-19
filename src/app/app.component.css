@@ -1,5 +1,5 @@
 :host {
-  --navbar-height: 56px;
+  --navbar-height: 66px;
   --black-pearl: #001219;
   --midnight-green: #005f73;
   --dark-cyan: #0a9396;
@@ -14,4 +14,17 @@
 
 .navbar {
   height: var(--navbar-height);
+}
+
+.logo-wrapper {
+  margin: 10px;
+}
+
+.logo-container {
+  height: 45px;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
 }
