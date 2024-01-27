@@ -16,16 +16,16 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   getAll = (): Observable<JsonResult<Product[]>> =>
-    this.http.get<JsonResult<Product[]>>(this.baseApiUrl + '/api/products/get-all');
+    this.http.get<JsonResult<Product[]>>(this.baseApiUrl + '/api/v1/products/get-all');
 
   getProductByBarcode = (barcode: string): Observable<JsonResult<Product>> =>
-    this.http.get<JsonResult<Product>>(this.baseApiUrl + '/api/products/get-by-barcode/' + barcode);
+    this.http.get<JsonResult<Product>>(this.baseApiUrl + '/api/v1/products/get-by-barcode/' + barcode);
 
   add = (request: SaveProduct): Observable<JsonResult<Product>> =>
-    this.http.post<JsonResult<Product>>(this.baseApiUrl + '/api/products/add', request);
+    this.http.post<JsonResult<Product>>(this.baseApiUrl + '/api/v1/products/add', request);
 
   update = (id: string, request: SaveProduct): Observable<JsonResult<Product>> =>
-    this.http.put<JsonResult<Product>>(this.baseApiUrl + `/api/products/update/${id}`, request);
+    this.http.put<JsonResult<Product>>(this.baseApiUrl + `/api/v1/products/update/${id}`, request);
 
-  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/products/delete/${id}`);
+  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/v1/products/delete/${id}`);
 }

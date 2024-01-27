@@ -19,23 +19,23 @@ export class SalesService {
   constructor(private http: HttpClient) { }
 
   getOpenedSale = (): Observable<JsonResult<Sale>> =>
-    this.http.get<JsonResult<Sale>>(this.baseApiUrl + '/api/point-of-sales/get-opened-sale');
+    this.http.get<JsonResult<Sale>>(this.baseApiUrl + '/api/v1/point-of-sales/get-opened-sale');
 
   addProductToSale = (request: AddProductRequestToSale): Observable<JsonResult<Sale>> =>
-    this.http.post<JsonResult<Sale>>(this.baseApiUrl + '/api/point-of-sales/add-product', request);
+    this.http.post<JsonResult<Sale>>(this.baseApiUrl + '/api/v1/point-of-sales/add-product', request);
 
   changeOpenedSaleStatus = (request: ChangeSaleStatus): Observable<JsonResult<Sale | undefined>> =>
-    this.http.put<JsonResult<Sale | undefined>>(this.baseApiUrl + '/api/point-of-sales/change-opened-sale-status', request);
+    this.http.put<JsonResult<Sale | undefined>>(this.baseApiUrl + '/api/v1/point-of-sales/change-opened-sale-status', request);
 
   sendReceiptToEmail = (request: SendReceiptToEmail) =>
-    this.http.put(this.baseApiUrl + '/api/point-of-sales/send-receipt-email', request);
+    this.http.put(this.baseApiUrl + '/api/v1/point-of-sales/send-receipt-email', request);
 
   addDiscountToSale = (request: AddDiscountToSale): Observable<JsonResult<Sale>> =>
-    this.http.patch<JsonResult<Sale>>(this.baseApiUrl + `/api/point-of-sales/add-discount`, request);
+    this.http.patch<JsonResult<Sale>>(this.baseApiUrl + `/api/v1/point-of-sales/add-discount`, request);
 
   addClientToSale = (request: AddClientToSale): Observable<JsonResult<Sale>> =>
-    this.http.patch<JsonResult<Sale>>(this.baseApiUrl + `/api/point-of-sales/add-client`, request);
+    this.http.patch<JsonResult<Sale>>(this.baseApiUrl + `/api/v1/point-of-sales/add-client`, request);
 
   deleteProductFromSale = (order: number): Observable<JsonResult<Sale>> =>
-    this.http.delete<JsonResult<Sale>>(this.baseApiUrl + `/api/point-of-sales/delete-product/${order}`);
+    this.http.delete<JsonResult<Sale>>(this.baseApiUrl + `/api/v1/point-of-sales/delete-product/${order}`);
 }

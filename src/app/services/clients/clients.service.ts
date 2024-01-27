@@ -16,13 +16,13 @@ export class ClientsService {
   constructor(private http: HttpClient) { }
 
   getAll = (): Observable<JsonResult<Client[]>> =>
-    this.http.get<JsonResult<Client[]>>(this.baseApiUrl + '/api/clients/get-all');
+    this.http.get<JsonResult<Client[]>>(this.baseApiUrl + '/api/v1/clients/get-all');
 
   add = (request: SaveClient): Observable<JsonResult<Client>> =>
-    this.http.post<JsonResult<Client>>(this.baseApiUrl + '/api/clients/add', request);
+    this.http.post<JsonResult<Client>>(this.baseApiUrl + '/api/v1/clients/add', request);
 
   update = (id: string, request: SaveClient): Observable<JsonResult<Client>> =>
-    this.http.put<JsonResult<Client>>(this.baseApiUrl + `/api/clients/update/${id}`, request);
+    this.http.put<JsonResult<Client>>(this.baseApiUrl + `/api/v1/clients/update/${id}`, request);
 
-  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/clients/delete/${id}`);
+  delete = (id: Guid) => this.http.delete(this.baseApiUrl + `/api/v1/clients/delete/${id}`);
 }
